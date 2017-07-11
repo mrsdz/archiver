@@ -1,0 +1,16 @@
+extends template
+
+block head
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.25/css/uikit.min.css")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.25/js/uikit.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.25/js/uikit-icons.min.js")
+
+block content
+    div.uk-card.uk-card-body(style="width: 50%")
+        form.uk-container(ref='uploadForm' id='uploadForm' method="post" encType="multipart/form-data" action="/upload/")
+            label لطفا مدل فایل مورد نظر خود را انتخاب نمایید.
+            select.uk-select(name="type" required)
+                option(value="1") سلام 
+            label لطفا فایل مورد نظر خود را انتخاب نمایید.
+            input.w3-input(type="file" multiple name="docs" required)
+            input.uk-button.uk-button-default.uk-margin-top(type="submit" name="sbt" value="آپلود")
