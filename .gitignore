@@ -22,5 +22,8 @@ node_modules
 # Coveralls
 coverage
 
+# VS code stuff
+.vscode
+
 # Benchmarking
 benchmarks/graphs
