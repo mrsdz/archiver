@@ -1,9 +1,15 @@
 const express = require('express');
 const router = express.Router();
-var passport = require('passport');
 var Account = require('../models/account')
+var jwt = require('jsonwebtoken');
 
-router.post('/', passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }), function(req, res) {
+router.post('/', function(req, res) {
+    Account.findOne(
+        { username: req.body.username },
+        (err, user) => {
+            if (err) res.flush
+        }
+    )
     res.redirect('/upload');
 });
 
