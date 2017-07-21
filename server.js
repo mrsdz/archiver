@@ -1,12 +1,15 @@
 const express = require('express');
 const app = express();
-const logger = require('morgan'); //This is the standard logger for expressJS
-const uploader = require('express-fileupload'); //File uploader
-const db = require('mongoose'); //MongoDB Driver
+// This is the standard logger for expressJS
+const logger = require('morgan');
+//File uploader
+const uploader = require('express-fileupload'); 
+// MongoDB Driver
+const db = require('mongoose'); 
 const bodyParser = require('body-parser');
+// This module is for creating and managing tokens
 const jwt = require('jsonwebtoken');
-
-//Connect to the shamsipour DB
+// Connect to the shamsipour DB
 db.connect('mongodb://localhost/shamsipour', { useMongoClient: true }, (err) => {
     if (err) throw err;
     else console.log('Connected to db.');
@@ -27,16 +30,21 @@ app.locals.reshteh = [
     { id: 7, name: "حسابداری کارشناسی" },
 ];
 
-app.set('port', process.env.PORT | 3000); //Get port from env or if that was empty set a port
+// Get port from env or if that was empty set a port
+app.set('port', process.env.PORT | 3000); 
 
-app.use(logger('dev')); //Log every http requests
-app.use(express.static('public')); //Define statics files
+// Log every http requests
+app.use(logger('dev')); 
+
+// Define statics files
+app.use(express.static('public')); 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//Routings
-app.use(require('./app'));
+// Routings
+app.use("/student/", require('./api/student'));
+app.use("/admin/", require('./api/admin'));
 
 app.listen(app.get('port') , (err) => {
     if (err) throw err;
