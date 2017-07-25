@@ -79,7 +79,7 @@ router.get('/setup', function(req, res) {
 
 
 router.use((req, res, next) => {
-    var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+    var token = req.body.token || req.param.token || req.headers['x-access-token'];
     if (token) {
         jwt.verify(token, config.student_secret, (err, decoded) => {
             if (err) {
