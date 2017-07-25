@@ -200,12 +200,42 @@ router.post('/update/student/', (req, res) => {
 router.get('/get/student/', (req, res) => {
     if (!req.query.username)
         return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
-    this_username = req.query.username;
+    var this_username = req.query.username;
     Account.findOne({ username: this_username }, (err, user) => {
         if (!user)
             return res.status(400).json({ "error": "دانشجویی با این شماره دانشجویی وجود ندارد." });
         return res.json(user);
     });
+});
+
+router.post('/add/staff/', (req, res) => {
+    if (!(req.query.username && req.query.password && req.query.name_first && req.query.name_last && req.query.email))
+        return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
+
+    var this_username = req.query.username,
+        this_password = req.query.password,
+        this_last_name = req.query.name_last,
+        this_first_name = req.query.name_first,
+        this_email = req.query.email;
+
+    var new_staff = new Admin({
+        username: this_username,
+        password: this_password,
+        email: this_email,
+        name: {
+            last: this_last_name,
+            first: this_first_name
+        },
+        admin: false
+    });
+    new_staff.save((err) => {
+        if (err) {
+            if (err.code == 11000)
+                return res.status(400).json({ "error": "کارمندی با این مشخصات وجود دارد." });
+            return res.status(400).json({ "error": "در ثبت اطلاعات خطایی رخ داده است" });
+        }
+        return res.json({ message: "کارمند با موفقیت اضافه شد." });
+    })
 });
 
 module.exports = router;
