@@ -14,7 +14,8 @@ const Account = new Schema ({
     docs: [
         {
             address: String, 
-            name: String, 
+            name: String,
+            accepted: Boolean,
             date: {
                 type: Date, 
                 default: Date.now
