@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routings
 app.use("/student/", require('./api/student'));
-app.use("/admin/", require('./api/admin'));
+app.use("/admin/", require('./api/Admins/admin'));
 
 app.listen(app.get('port') , (err) => {
     if (err) throw err;

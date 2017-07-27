@@ -1,17 +1,20 @@
 const express = require('express');
 const app = express;
 const router = express.Router();
-var Admin = require('../models/admin');
-var Account = require('../models/account');
+var Admin = require('../../models/admin');
+var Account = require('../../models/account');
 const jwt = require('jsonwebtoken');
-const MainDocs = require('../models/main_docs');
+const MainDocsModelsModels = require('../../models/main_docs');
+const MainDocsApi = require('./maindocs');
+const Staff = require('./staff');
+
 /*
     this file isn't in github repository and you should add this manually like this:
     module.exports = {
         'secret': "this is top secret",
     };
 */
-const config = require('../config')
+const config = require('../../config')
 
 router.post('/login/', (req, res) => {
     if (!(req.query.username && req.query.password))
@@ -209,94 +212,9 @@ router.get('/get/student/', (req, res) => {
     });
 });
 
-router.post('/add/staff/', (req, res) => {
-    if (!(req.query.username && req.query.password && req.query.name_first && req.query.name_last && req.query.email))
-        return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
+router.use('/staff/', Staff);
 
-    var this_username = req.query.username,
-        this_password = req.query.password,
-        this_last_name = req.query.name_last,
-        this_first_name = req.query.name_first,
-        this_email = req.query.email;
+router.use('/maindoc/', MainDocsApi);
 
-    var new_staff = new Admin({
-        username: this_username,
-        password: this_password,
-        email: this_email,
-        name: {
-            last: this_last_name,
-            first: this_first_name
-        },
-        admin: false
-    });
-    new_staff.save((err) => {
-        if (err) {
-            if (err.code == 11000)
-                return res.status(400).json({ "error": "کارمندی با این مشخصات وجود دارد." });
-            return res.status(400).json({ "error": "در ثبت اطلاعات خطایی رخ داده است" });
-        }
-        return res.json({ message: "کارمند با موفقیت اضافه شد." });
-    })
-});
-
-router.post('/add/maindoc/', (req, res) => {
-    if (!req.query.name)
-        return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
-
-    this_name = req.query.name;
-    var new_docs = new MainDocs ({
-        name: this_name
-    });
-    new_docs.save((err) => {
-        if (err) {
-            if (err.code == 11000)
-                return res.status(400).json({ "error": "مدرک اصلی‌ای با این مشخصات وجود دارد." });
-            return res.status(400).json({ "error": "در ثبت اطلاعات خطایی رخ داده است" });
-        }
-        return res.json({ message: "مدرک اصلی با موفقیت اضافه شد." });
-    });
-});
-
-router.delete('/delete/maindoc/', (req, res) => {
-    if (!req.query.id)
-        return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
-
-    this_id = ObjectId(req.query.id);
-    MainDocs.findOne({ _id: this_id }, (err, doc) => {
-        if (err)
-            return res.status(400).json(err);
-
-        if (!doc)
-            return res.status(400).json({ "error": "اطلاعاتی با این آیدی وجود ندارد." });
-
-        MainDocs.deleteOne({ _id: this_id }, (err) => {
-            if (err)
-                return res.status(400).json({ "error": "خطایی رخ داده است" });
-            return res.json({ message: "اطلاعات با موفقیت پاک شد."});
-        });
-    });
-});
-
-router.post('/update/maindoc/', (req, res) => {
-    if (!(req.query.id && req.query.name))
-        return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
-
-    var this_id = ObjectId(req.query.id);
-    var this_name = req.query.name;
-
-    MainDocs.findOne({ _id: this_id }, (err, doc) => {
-        if (err)
-            return res.status(400).json(err);
-
-        if (!doc)
-            return res.status(400).json({ "error": "اطلاعاتی با این آیدی وجود ندارد." });
-
-        MainDocs.updateOne({ _id: this_id }, { name: this_name }, (err) => {
-            if (err)
-                return res.status(400).json({ "error": "خطایی رخ داده است" });
-            return res.json({ message: "اطلاعات با موفقیت به‌روز شد."});
-        });
-    });
-});
 
 module.exports = router;
