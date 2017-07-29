@@ -22,16 +22,8 @@ router.post('/login/', (req, res) => {
     Admin.findOne(
         { username: req.query.username },
         (err, user) => {
-            if (err){
-                if (err.name == "CastError") {
-                    return res.status(400).json({
-                        done: false, 
-                        message: "مقادیر فرستاده شده باید عدد باشد."
-                    });
-                }
+            if (err)
                 return res.json(err);
-            }
-
             if (!user) {
                 return res.json({ 
                     done: false, 
