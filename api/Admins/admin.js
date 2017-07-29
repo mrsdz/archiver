@@ -57,29 +57,6 @@ router.post('/login/', (req, res) => {
     )
 });
 
-router.get('/setup/', function(req, res) {
-
-  // Create a sample user
-  var nick = new Admin({ 
-    username: "sdz", 
-    password: "m.sdz1378",
-    name: {
-        first: "محمدرضا",
-        last: "صادق زاده"
-    },
-    admin: true,
-    email: "org.m.sdz@gmail.com"
-  });
-
-  // Save the sample user
-  nick.save(function(err) {
-    if (err) throw err;
-
-    console.log('User saved successfully');
-    res.json({ success: true });
-  });
-});
-
 router.use((req, res, next) => {
     var token = req.query.token || req.param.token || req.headers['x-access-token'];
     if (token) {
