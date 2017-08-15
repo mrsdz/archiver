@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 var Account = require('../../models/account');
 
-router.post('/add/student/', (req, res) => {
+router.post('/add/', (req, res) => {
     if (!(req.query.username && req.query.password && req.query.name_last && req.query.name_first && req.query.reshteh && req.query.maghta && req.query.dore)) 
         return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
 
@@ -35,7 +35,7 @@ router.post('/add/student/', (req, res) => {
     });
 });
 
-router.delete('/delete/student/', (req,res) => {
+router.delete('/delete/', (req,res) => {
     if (!(req.query.username)) 
         return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
 
@@ -54,7 +54,7 @@ router.delete('/delete/student/', (req,res) => {
     });
 });
 
-router.post('/update/student/', (req, res) => {
+router.post('/update/', (req, res) => {
     if (!(req.query.username && req.query.password && req.query.name_last && req.query.name_first && req.query.reshteh && req.query.maghta && req.query.dore && req.query.unupdated)) 
         return res.status(400).json({ 
             "error": "اطلاعات وارد شده ناقص است." 
@@ -92,7 +92,7 @@ router.post('/update/student/', (req, res) => {
     });
 });
 
-router.get('/get/student/', (req, res) => {
+router.get('/get/', (req, res) => {
     if (!req.query.username)
         return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
     var this_username = req.query.username;
@@ -100,6 +100,18 @@ router.get('/get/student/', (req, res) => {
         if (!user)
             return res.status(400).json({ "error": "دانشجویی با این شماره دانشجویی وجود ندارد." });
         return res.json(user);
+    });
+});
+
+router.post('/acceptDoc/', (req, res) => {
+    if (!(req.query.username && req.query.doc_id))
+        return res.status(400).json({ "error": "اطلاعات وارد شده ناقص است." });
+    var this_username = req.query.username,
+        this_doc_id = req.body.doc_id;
+    Account.findOne({ username: this_username }, (err, user) => {
+        if (!user)
+            return res.status(400).json({ "error": "دانشجویی با این شماره دانشجویی وجود ندارد." });
+        return res.json({ message: parseInt(user.docs.id) })
     });
 });
 
